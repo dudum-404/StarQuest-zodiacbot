@@ -1,7 +1,7 @@
 "use client";
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useState, useRef, useEffect } from 'react';
-import { Analytics } from "@vercel/analytics/react";
+
 export default function Home() {
   const [messages, setMessages] = useState([
     {
@@ -115,17 +115,16 @@ export default function Home() {
       height="100vh"
       display="flex"
       flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
     >
       <Stack
         direction={'column'}
         width="500px"
-        height="700px"
+        height="calc(100% - 60px)" // Adjust height to account for footer
         border="1px solid black"
         p={2}
         spacing={3}
         borderRadius={10} // Rounded chat box
+        margin="0 auto" // Center the chat box
       >
         <Stack
           direction={'column'}
@@ -187,6 +186,24 @@ export default function Home() {
           </Button>
         </Stack>
       </Stack>
+
+      {/* Footer */}
+      <Box
+        width="100%"
+        bgcolor="rgba(128, 128, 128, 0.1)" // Light gray background
+        p={1}
+        textAlign="center"
+        borderTop="1px solid #ddd"
+        position="absolute"
+        bottom={0}
+      >
+        <Typography variant="body2" color="textSecondary">
+          Made with Next.js and deployed with Vercel
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Assets used from: Flaticon, Mixkit.co, <a href="https://codepen.io/mohaiman/pen/MQqMyo" target="_blank" rel="noopener noreferrer">CodePen</a>
+        </Typography>
+      </Box>
     </Box>
   );
 }
