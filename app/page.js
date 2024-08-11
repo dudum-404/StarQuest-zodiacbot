@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, Stack, TextField } from '@mui/material';
 import { useState, useRef, useEffect } from 'react';
-
+import { Analytics } from "@vercel/analytics/react";
 export default function Home() {
   const [messages, setMessages] = useState([
     {
