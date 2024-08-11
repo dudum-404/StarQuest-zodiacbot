@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Button, Stack, TextField } from '@mui/material'
 import { useState, useRef, useEffect } from 'react'
 
@@ -8,24 +6,38 @@ export default function Home() {
     {
       role: 'assistant',
       content: "Hey Welcome to StarQuest!",
-      
     },
   ])
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null) // Ref for scrolling
 
-  // Load the mp3 sounds
-  const userSendSound = new Audio('/user_send.mp3')
-  const botSendSound = new Audio('/bot_send.mp3')
-  const buttonClickSound = new Audio('/button_click.mp3')
+  // Initialize Audio objects
+  const [audioObjects, setAudioObjects] = useState({
+    userSendSound: null,
+    botSendSound: null,
+    buttonClickSound: null,
+  })
+
+  useEffect(() => {
+    // Only run in the browser
+    const userSendSound = new Audio('/user_send.mp3')
+    const botSendSound = new Audio('/bot_send.mp3')
+    const buttonClickSound = new Audio('/button_click.mp3')
+
+    setAudioObjects({
+      userSendSound,
+      botSendSound,
+      buttonClickSound,
+    })
+  }, [])
 
   const sendMessage = async () => {
     if (!message.trim() || isLoading) return;
     setIsLoading(true)
 
     // Play button click sound
-    buttonClickSound.play()
+    audioObjects.buttonClickSound?.play()
 
     setMessage('')
     setMessages((messages) => [
@@ -35,7 +47,7 @@ export default function Home() {
     ])
 
     // Play user send sound
-    userSendSound.play()
+    audioObjects.userSendSound?.play()
 
     try {
       const response = await fetch('/api/chat', {
@@ -68,7 +80,7 @@ export default function Home() {
       }
 
       // Play bot send sound
-      botSendSound.play()
+      audioObjects.botSendSound?.play()
 
     } catch (error) {
       console.error('Error:', error)
@@ -163,7 +175,6 @@ export default function Home() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={isLoading}
-            
           />
           <Button 
             variant="contained" 
