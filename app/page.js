@@ -1,5 +1,7 @@
-import { Box, Button, Stack, TextField } from '@mui/material'
-import { useState, useRef, useEffect } from 'react'
+'use client';
+
+import { Box, Button, Stack, TextField } from '@mui/material';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -7,47 +9,32 @@ export default function Home() {
       role: 'assistant',
       content: "Hey Welcome to StarQuest!",
     },
-  ])
-  const [message, setMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const messagesEndRef = useRef(null) // Ref for scrolling
+  ]);
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null); // Ref for scrolling
 
-  // Initialize Audio objects
-  const [audioObjects, setAudioObjects] = useState({
-    userSendSound: null,
-    botSendSound: null,
-    buttonClickSound: null,
-  })
-
-  useEffect(() => {
-    // Only run in the browser
-    const userSendSound = new Audio('/user_send.mp3')
-    const botSendSound = new Audio('/bot_send.mp3')
-    const buttonClickSound = new Audio('/button_click.mp3')
-
-    setAudioObjects({
-      userSendSound,
-      botSendSound,
-      buttonClickSound,
-    })
-  }, [])
+  // Load the mp3 sounds
+  const userSendSound = new Audio('/user_send.mp3');
+  const botSendSound = new Audio('/bot_send.mp3');
+  const buttonClickSound = new Audio('/button_click.mp3');
 
   const sendMessage = async () => {
     if (!message.trim() || isLoading) return;
-    setIsLoading(true)
+    setIsLoading(true);
 
     // Play button click sound
-    audioObjects.buttonClickSound?.play()
+    buttonClickSound.play();
 
-    setMessage('')
+    setMessage('');
     setMessages((messages) => [
       ...messages,
       { role: 'user', content: message },
       { role: 'assistant', content: '' },
-    ])
+    ]);
 
     // Play user send sound
-    audioObjects.userSendSound?.play()
+    userSendSound.play();
 
     try {
       const response = await fetch('/api/chat', {
@@ -56,57 +43,57 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify([...messages, { role: 'user', content: message }]),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok')
+        throw new Error('Network response was not ok');
       }
 
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
 
       while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        const text = decoder.decode(value, { stream: true })
+        const { done, value } = await reader.read();
+        if (done) break;
+        const text = decoder.decode(value, { stream: true });
         setMessages((messages) => {
-          let lastMessage = messages[messages.length - 1]
-          let otherMessages = messages.slice(0, messages.length - 1)
+          let lastMessage = messages[messages.length - 1];
+          let otherMessages = messages.slice(0, messages.length - 1);
           return [
             ...otherMessages,
             { ...lastMessage, content: lastMessage.content + text },
-          ]
-        })
+          ];
+        });
       }
 
       // Play bot send sound
-      audioObjects.botSendSound?.play()
+      botSendSound.play();
 
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error:', error);
       setMessages((messages) => [
         ...messages,
         { role: 'assistant', content: "I'm sorry, but I encountered an error. Please try again later." },
-      ])
+      ]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault()
-      sendMessage()
+      event.preventDefault();
+      sendMessage();
     }
-  }
+  };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-  
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <Box
@@ -187,5 +174,5 @@ export default function Home() {
         </Stack>
       </Stack>
     </Box>
-  )
+  );
 }
