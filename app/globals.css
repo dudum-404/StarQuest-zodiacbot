@@ -146,3 +146,42 @@ body, html {
         border-radius: 50%;
     }
 }
+
+/* Responsive Styling for Mobile Screens */
+@media only screen and (max-width: 768px) {
+    .context h1 {
+        font-size: 30px; /* Reduce font size for smaller screens */
+    }
+
+    .circles li {
+        width: 10px;
+        height: 10px; /* Reduce size of circles */
+    }
+
+    .circles li:nth-child(1),
+    .circles li:nth-child(6),
+    .circles li:nth-child(7),
+    .circles li:nth-child(10) {
+        width: 50px;
+        height: 50px; /* Reduce size of larger circles */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .context h1 {
+        font-size: 25px; /* Further reduce font size for very small screens */
+    }
+
+    .circles li {
+        width: 8px;
+        height: 8px; /* Further reduce size of circles */
+    }
+
+    .circles li:nth-child(1),
+    .circles li:nth-child(6),
+    .circles li:nth-child(7),
+    .circles li:nth-child(10) {
+        width: 40px;
+        height: 40px; /* Further reduce size of larger circles */
+    }
+}
