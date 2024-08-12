@@ -6,7 +6,7 @@ export default function Home() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hey Welcome to StarQuest!",
+      content: "Hey, welcome to StarQuest! What is your preferred language?",
     },
   ]);
   const [message, setMessage] = useState('');
